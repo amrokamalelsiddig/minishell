@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aelsiddi <aelsiddi@student.42.ae>          +#+  +:+       +#+         #
+#    By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/03 18:36:40 by kpanikka          #+#    #+#              #
-#    Updated: 2022/12/04 22:56:42 by aelsiddi         ###   ########.fr        #
+#    Updated: 2022/12/24 10:40:35 by hheggy           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,9 +15,34 @@ NAME	= minishell
 cc		= gcc -g
 CFLAG	= -Wall -Werror -Wextra -I libft/
 RMFLAG  = -f
-SRC		= minishell.c parse.c execute.c error.c dlist.c echo.c  cd.c helper_command.c\
-		parse_spl_char.c parse_quote.c env.c elist.c util.c pwd.c dir.c \
-		export.c
+SRC		= minishell.c \
+		builtin_functions/builtin_utils.c \
+		builtin_functions/cd.c \
+		builtin_functions/echo.c \
+		builtin_functions/env.c \
+		builtin_functions/exit.c \
+		builtin_functions/export.c \
+		builtin_functions/pwd.c \
+		builtin_functions/unset.c \
+		ultimate_parser/command_line.c \
+		ultimate_parser/command.c \
+		ultimate_parser/expand.c \
+		ultimate_parser/get.c \
+		ultimate_parser/parser_utils.c \
+		ultimate_parser/parser_utils2.c \
+		ultimate_parser/parser.c \
+		ultimate_parser/skip.c \
+		pipex/here_doc.c \
+		pipex/pipex_last.c \
+		pipex/pipex_utils.c \
+		pipex/pipex.c \
+		pipex/redirects.c \
+		pipex/signals.c \
+		extrafunctions/ft_skipchar.c \
+		extrafunctions/utils4.c \
+		extrafunctions/utils3.c \
+		extrafunctions/utils2.c \
+		extrafunctions/utils.c
 LIBFT	= -L libft -lft
 
 

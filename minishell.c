@@ -3,87 +3,120 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aelsiddi <aelsiddi@student.42.ae>          +#+  +:+       +#+        */
+/*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 12:12:03 by kpanikka          #+#    #+#             */
-/*   Updated: 2022/12/05 01:21:10 by aelsiddi         ###   ########.fr       */
+/*   Updated: 2022/12/23 13:26:00 by hheggy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_msvar	msv;
+t_info	g_info;
 
-/*
-	The function read_loop does a clean exit for the program 
-*/
-
-void	init_minishell(t_msvar	*msv)
+static char	**fill_bltn(void)
 {
-	msv->rline = NULL;
-	msv->cmd_num = 0;
-	msv->num_pipe = 0;
-	msv->quote = 0;
-	msv->dquote = 0;
-	msv->parse_error = 0;
-	msv->w_len = 0;
-	msv->w_count = 0;
-	msv->exit_flag = 0;
-	msv->block_list = NULL;
-	// msv->env_list = NULL;
-	msv->output = ft_calloc(32767, 1);
-	msv->temp = NULL;
-	msv->b_temp = NULL;
+	char	**ret;
+	int		i;
+
+	i = 0;
+	ret = ft_calloc(8, sizeof (char *));
+	if (!ret)
+		return (NULL);
+	ret[0] = ft_strdup("echo");
+	ret[1] = ft_strdup("cd");
+	ret[2] = ft_strdup("pwd");
+	ret[3] = ft_strdup("export");
+	ret[4] = ft_strdup("unset");
+	ret[5] = ft_strdup("env");
+	ret[6] = ft_strdup("exit");
+	while (i < 7)
+	{
+		if (!ret[i])
+			return (free_arr(&ret));
+		i++;
+	}
+	return (ret);
 }
 
-/*
-*  The function read_loop  reads line from the command line and then 
-*  processes it
-* 
-*/
-
-int	read_loop(t_msvar *msv)
+static int	fill_minidir(char **argv)
 {
-	while (1)
-	{
-		msv->rline = readline("\033[1;35mminishell $ \033[0m");
-		if (msv->rline)
-			add_history(msv->rline);
-		else
-			clean_exit(msv);
-		parse(msv);
-		if (msv->cmd_num == 7 || msv->exit_flag == 1)
-			clean_exit(msv);
+	char	*temp;
+	char	*temp1;
 
-		if (!msv->parse_error)
-			ft_exec(msv);
-		else
-			parse_error(msv);
-		//ft_dlstprt(msv->block_list); /// check print
-		msv->temp = msv->rline;
-		free(msv->temp);
-		free(msv->output);
-		init_minishell(msv);
-	}
+	temp = getcwd(NULL, 0);
+	temp1 = ft_strrchr(argv[0], '/');
+	ft_bzero(temp1, ft_strlen(temp1));
+	chdir(argv[0]);
+	g_info.minidir = getcwd(NULL, 0);
+	chdir(temp);
+	temp1 = g_info.minidir;
+	g_info.minidir = ft_strjoin(temp1, "/.");
+	free(temp);
+	free(temp1);
+	return (0);
 }
 
-void siginthandler(int sig_num)
+static void	init_info(int argc, char **argv, char **envp)
 {
-	if (sig_num == SIGINT)
+	int		temp_i;
+	char	*temp_s;
+	char	*temp_s1;
+
+	(void)argc;
+	fill_minidir(argv);
+	g_info.std_fd[0] = dup(STDIN_FILENO);
+	g_info.std_fd[1] = dup(STDOUT_FILENO);
+	g_info.bltn = fill_bltn();
+	g_info.env = ft_arrdup(envp, 10);
+	if (!g_info.env)
+		return ;
+	temp_s = get_str(g_info.env, "SHLVL=");
+	if (temp_s)
 	{
-		msv.exit_flag = 1;
-		clean_exit(&msv);
+		temp_i = ft_atoi(temp_s) + 1;
+		temp_s1 = ft_itoa(temp_i);
+		if (temp_i > 1 && temp_s1)
+			ft_memcpy(temp_s, temp_s1, ft_strlen(temp_s1));
+		free(temp_s1);
 	}
+	g_info.error = 0;
+	g_info.filed = ft_calloc(32, sizeof (int));
+	g_info.files = ft_calloc(16, sizeof (char *));
+}
+
+int	prompt(char **envp)
+{
+	char	*str[1000];
+	int		index;
+
+	index = 0;
+	set_signals();
+	str[index] = readline("\033[1;35mminishell$ \033[0m");
+	while (str[index])
+	{
+		command_center(str[index], &envp);
+		if (ft_strlen(str[index]) > 0 && g_info.sig != 1)
+			add_history(str[index]);
+		free(str[index]);
+		index++;
+		if (index == 1000)
+			index = 0;
+		set_signals();
+		str[index] = readline("\033[1;35mminishell$ \033[0m");
+	}
+	if (str[index])
+		free(str[index]);
+	return (0);
 }
 
 int	main(int ac, char **av, char **env)
 {
-	(void)ac;
-	(void)av;
-	signal(SIGINT, siginthandler);
-	init_minishell(&msv);
-	load_env(&msv, env);
-	// ft_elstprint(msv.env_list);
-	read_loop(&msv);
+	init_info(ac, av, env);
+	if (!g_info.env || !g_info.bltn || !g_info.filed || !g_info.files)
+		printf("asojihaisuhdsh\n");
+	env = g_info.env;
+	set_signals();
+	prompt(env);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aelsiddi <aelsiddi@student.42.ae>          +#+  +:+       +#+        */
+/*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 12:12:36 by kpanikka          #+#    #+#             */
-/*   Updated: 2022/12/09 04:13:23 by aelsiddi         ###   ########.fr       */
+/*   Updated: 2022/12/23 13:39:55 by hheggy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,35 @@
 # include <stdlib.h>
 # include <string.h>
 # include <signal.h>
+# include <fcntl.h>
 # include <unistd.h>
 # include <dirent.h>
 # include "libft/libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/wait.h>
+# include <errno.h>
+# include <err.h>
+# include <stdbool.h>
+# include <inttypes.h>
+
+# define INPUT_END 1
+# define OUTPUT_END 0
+# define NO_FILE -1
+# define NO_READ -2
+# define NO_WRIT -3
+# define MEM_ERR -4
+# define OPN_ERR -5
+# define HEREDOC 100
+# define SIG_END 130
+# define SIG_BCK 131
+# define STD_VAL 200
+# define NONBLTN 1000
+# define MEMORY_ERROR "minishell: Cannot allocate memory"
+# define TOKEN_ERROR "minishell: syntax error near unexpected token "
+# define NEWL_ERROR "minishell: syntax error near unexpected token `newline'"
+# define ARG_ERROR "too many arguments"
+# define NUM_ERROR "numeric argument required"
 
 typedef struct s_env
 {
@@ -31,108 +54,135 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
-/*
-* ! The struct s_dlist is a doubly linked list
-	content is the data stored in the node
-	next is the pointer to the next node
-	prev is the pointer to the previous node
-		len_quote is the length of the quote used for >> or << redirection 
-	it will be 1 else for all it is 0
-	cmd_seq is the command sequence number for the command 0 for no command 
-		1 for first command 2 for second command and 
-		so on till command 7 for exit
-		after 7 the program will check if the command is there in the system  
-		and then execute it or give an error
-	is_opti is a flag to check if the command is a option or not
-*/
-
-typedef struct s_dlist
+typedef struct s_command
 {
-	char			*content;
-	char			quote;
-	int				len_quote;
-	int				cmd_seq;
-	int				is_option;
-	struct s_dlist	*next;
-	struct s_dlist	*prev;
-}	t_dlist;
+	int		fd_redirs[2];
+	int		num;
+	char	*file;
+	char	*name;
+	char	**argv;
+	char	**rdrct;
+	pid_t	pid;
+	void	*next;
+}			t_command;
 
-/*
-	cmd_num is the number to find which command 
-	eg echo = 1 
-		...
-*/
-typedef struct minishellvariables
+typedef struct s_info
 {
-	char	*rline;
-	int		i;
-	char	*output;
-	int		cmd_num;
-	int		quote;
-	int		dquote;
-	int		num_pipe;
-	int		parse_error;
-	int		exit_flag;
-	int		w_count;
-	int		w_len;
-	t_dlist	*block_list;
-	t_env	*env_list;	
-	char	*temp;
-	char	*b_temp;
-	char    *path;
-}t_msvar;
+	uint8_t		sig;
+	uint8_t		error;
+	uint8_t		last_prcs;
+	int32_t		std_fd[2];
+	int32_t		*filed;
+	t_command	*commands;
+	char		*minidir;
+	char		**files;
+	char		**env;
+	char		**bltn;
+}				t_info;
 
-void	parse(t_msvar *msv);
-void	parse_error(t_msvar *msv);
-void	parse_gt_block(t_msvar *msv);
-void	parse_lt_block(t_msvar *msv);
-void	parse_pipe_block(t_msvar *msv);
-void	parse_quote_block(t_msvar *msv);
-void	parse_dquote_block(t_msvar *msv);
-char	*parse_dollar_block(t_msvar *msv);
-void	parse_nospl_block(t_msvar *msv);
+extern t_info	g_info;
 
-void	load_env(t_msvar *msv, char **env);
-char	*ft_getenv(char *str, t_env *env_list);
+/////************ NEW PARSING FUNCTIONS *******//////////
+char		*ft_getenv(char **envp, char *name);
+int			skip_argument(char *str);
+int			skip_quotes(char *str);
+int			skip_redirect(char *str);
+void		check_correct_use_of_pipes(char *str);
+int			str_is_empty(char *str);
+t_command	*parse_string(char *str);
+char		**get_split_path(void);
+char		*insert_content(char *str, int start, int end, char *content);
+void		*raise_error(char *message, char *str);
+int			is_builtin_command(char *name);
+char		*add_full_path(char *str, char **path);
+char		*get_quotes_content(char *str);
+char		*get_dollar(char *str);
+char		*get_dollar_for_expand(char *str);
+char		*get_redirect(char *str);
+char		*get_argument(char *str);
+void		disclose_quotes(char **str, int *i);
+void		expand_quotes(char **str);
+void		disclose_dollar(char **str, int *i);
+void		expand_dollar(char **str);
+char		*expand(char *argument);
+void		*free_command(t_command *command);
+char		**from_list_to_array(t_list *list);
+t_command	*new_command(t_list *list[2]);
+t_command	*get_last_command(t_command *command);
+void		*add_new_command(t_command **command, t_list *list[2]);
+void		add_argument(char **str, t_list **list);
+void		add_redirect(char **str, t_list **list);
+void		add_dollar(char **str, t_list **list);
+void		split_command_line(char *str, t_list *list[2]);
+char		*get_command_line(char **str);
+int			command_center(char *input, char ***envp);
+int			get_exit(t_command *commands);
+void		print_msg(int *stat);
+/////************ NEW PARSING FUNCTIONS *******//////////
 
-void	clean_exit(t_msvar *msv);
-// void	ft_exec(t_msvar *msv);
-void	ft_exec(t_msvar *msv);
-void	ft_exec_echo(t_msvar *msv);
+//////////////////******* EXTRA FUNCTIONS FROM LIBFT /////////////////////
+void		ft_lstadd_back1(t_list **lst, t_list *new);
+void		ft_lstadd_front1(t_list **lst, t_list *new);
+void		ft_lstclear1(t_list **lst, void (*del)(void*));
+void		ft_lstdelone1(t_list *lst, void (*del)(void*));
+void		ft_lstiter1(t_list *lst, void (*f)(void *));
+t_list		*ft_lstlast1(t_list *lst);
+t_list		*ft_lstmap1(t_list *lst, void *(*f)(void *), void (*del)(void *));
+t_list		*ft_lstnew1(void *content);
+int			ft_lstsize1(t_list *lst);
+void		ft_free_strs(char *s1, char *s2, char *s3);
+void		*free_arr(char ***arr);
+char		*ft_skipnchar(const char *str, int n, char *skip);
+char		*ft_strndup(const char *s1, size_t n);
+char		**ft_arrdup(char **arr, int add);
+void		err_msg(char *str, int option);
+char		*get_str(char **envp, char *reference);
+//void		*freedom(char ***arr);
+void		output_prompts(void);
+char		*ft_strcut(char *str, char *set);
+//////////////////******* EXTRA FUNCTIONS FROM LIBFT /////////////////////
 
-t_dlist	*ft_dlstnew(char *data, int cmd_seq, int len_q, char q);
-void	ft_dlstadd_back(t_dlist **lst, t_dlist *new);
-void	ft_dlstadd_front(t_dlist **lst, t_dlist *new);
-int		ft_dlstsize(t_dlist *lst);
-void	ft_dlstclear(t_dlist **lst);
-t_dlist	*ft_dlstlast(t_dlist *lst);
-int		ft_dlstprt(t_dlist *lst);
+//////////////////******* PIPEX UTILS /////////////////////
+int			set_name(t_command *cmd);
+int			*redirect(char **red_arr, int fd_pair[2], t_command *cmd);
+int			pipex(t_command *commands);
+int			chk_builtin(t_command *commands);
+int			check_fd_ret(int fd_redir[2], int fd[2], t_command *cmd);
+int			last_fork(t_command *commands);
+int			control(char *delim, t_command *cmd);
+void		error_pipex(char *str);
+void		ft_signal_cltr_c(int sig);
+void		set_signals(void);
+void		signal_in_child(void);
+void		ft_signal_pipes(int sig);
+void		signal_in_pipes(void);
+int			command_len(t_command *command);
+void		fill_fd(int *fd_arr, int count);
+int			command_len(t_command *command);
+//////////////////******* PIPEX UTILS /////////////////////
 
-t_env	*ft_elstnew(char *key, char *value);
-void	ft_elstadd_back(t_env **lst, t_env *new);
-void	ft_elstadd_front(t_env **lst, t_env *new);
-int		ft_elstsize(t_env *lst);
-void	ft_elstclear(t_env **lst);
-t_env	*ft_elstlast(t_env *lst);
-int		ft_elstprint(t_env *lst);
+//////////////////******* NEW BUILTIN FUNCTIONS /////////////////////
+int			ft_cd1(char **argv);
+int			ft_echo1(char **argv);
+int			ft_env1(char **argv);
+int			exit_success(void);
+int			exit_num(char *argv);
+int			arg_error(void);
+int			num_error(char *argv);
+int			ft_exit(char **argv);
+void		*export_error(char **new);
+char		**change_env(char *new_str, char **envp, char *name);
+char		**add_env(char *new_str, char **envp);
+char		**do_export(char *argv);
+int			ft_export(char **argv);
+int			ft_pwd1(void);
+int			ft_unset(char **argv);
+int			is_correct(char *argv);
+void		unset_error(char *argv, int *code);
+char		**do_unset(char *argv);
+int			ft_isnumeric(char *str);
+uint64_t	ft_atoul(const char *str);
+int			ft_arrlen(char **array);
+//////////////////******* NEW BUILTIN FUNCTIONS /////////////////////
 
-char	*ft_get_word(char *str, char ch);
-
-void 	ft_exec_pwd(t_msvar *lst);
-void 	ft_exec_env(t_msvar *lst);
-void 	ft_exec_exit();
-// void ft_exec_cd(t_msvar *lst);
-void 	ft_exec_cd(t_msvar *lst);
-char	*ft_substr2(char *s, unsigned int start, size_t	len);
-
-//*****************dir.c**************//
-int getDirList(char *str);
-int ls(t_msvar *lst);
-
-//***********export.c****************//
-void	ft_exec_export(t_msvar *lst);
-
-//*********helper_command.c**********//
-void	handle_other(t_msvar *msv);
-int 	validation(t_msvar *msv, char *opt_arg);
 #endif
