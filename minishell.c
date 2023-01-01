@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aelsiddi <aelsiddi@student.42.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 12:12:03 by kpanikka          #+#    #+#             */
-/*   Updated: 2022/12/23 13:26:00 by hheggy           ###   ########.fr       */
+/*   Updated: 2023/01/01 23:13:23 by aelsiddi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,5 +118,6 @@ int	main(int ac, char **av, char **env)
 	env = g_info.env;
 	set_signals();
 	prompt(env);
-	return (0);
+	// printf("%i\n",g_info.error);
+	return (g_info.error);
 }

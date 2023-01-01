@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export1.c                                          :+:      :+:    :+:   */
+/*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aelsiddi <aelsiddi@student.42.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 10:37:11 by hheggy            #+#    #+#             */
-/*   Updated: 2022/12/24 10:37:13 by hheggy           ###   ########.fr       */
+/*   Updated: 2023/01/01 23:13:08 by aelsiddi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,9 @@ int	ft_export(char **argv)
 {
 	char	**new;
 	int		index;
+	int		flag;
 
+	flag = 0;
 	index = 1;
 	if (!argv[index])
 		output_prompts();
@@ -91,13 +93,16 @@ int	ft_export(char **argv)
 	{
 		if (ft_strchr(argv[index], '='))
 		{
+			flag = 1;
 			new = do_export(argv[index]);
 			free_arr(&g_info.env);
 			g_info.env = new;
 		}
 		index++;
 	}
-	if (g_info.error)
-		return (1);
-	return (0);
+	if (!(flag))
+		g_info.error = 1;
+	// if (g_info.error)
+	// 	return (1);
+	return (g_info.error);
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_last2.c                                      :+:      :+:    :+:   */
+/*   pipex_last.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aelsiddi <aelsiddi@student.42.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 13:36:25 by hheggy            #+#    #+#             */
-/*   Updated: 2022/12/23 13:36:26 by hheggy           ###   ########.fr       */
+/*   Updated: 2022/12/24 20:54:47 by aelsiddi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,15 @@ static int	child(t_command *commands, int fd_out)
 	{
 		pid = fork();
 		if (pid)
+		{
 			return (pid);
+			// exit(0);
+		}
 		g_info.last_prcs = execve(commands->name, commands->argv, g_info.env);
 		//error(commands->name, get_err(commands->name));
 		get_err(commands->name);
-		printf("ERROR FROM CHILD\n\n");
+		if (!(g_info.last_prcs  != -1 ))
+			ft_putstr_fd(COMMAND_ERROR,1);
 	}
 	return (pid);
 }

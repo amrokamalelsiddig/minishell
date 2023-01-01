@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd1.c                                              :+:      :+:    :+:   */
+/*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aelsiddi <aelsiddi@student.42.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 10:36:13 by hheggy            #+#    #+#             */
-/*   Updated: 2022/12/24 10:36:18 by hheggy           ###   ########.fr       */
+/*   Updated: 2023/01/01 22:54:15 by aelsiddi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,18 @@ static int	change_dir(char *path, char **envp)
 	change_pwd(envp);
 	if (check)
 		check = 1;
+	else if (check == -1)
+		return (check);
 	return (check);
+}
+
+int home_flags(char *argv)
+{
+	if ((ft_strncmp(argv,";",1) == 0) || \
+	(ft_strncmp(argv,"-",1) == 0) || \
+	(ft_strncmp(argv,"~",1) == 0))
+		return (0);
+	return (1);
 }
 
 int	ft_cd1(char **argv)
@@ -66,8 +77,10 @@ int	ft_cd1(char **argv)
 	char	*home;
 	int		result;
 
+	if (argv[2] != NULL)
+
 	home = get_str(g_info.env, "HOME=");
-	if (!argv[1])
+	if ((!argv[1]) || !(home_flags(argv[1])))
 		result = change_dir(home, g_info.env);
 	else
 		result = change_dir(argv[1], g_info.env);

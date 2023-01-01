@@ -1,0 +1,5 @@
+
+
+pipes
+echo "hello there" | sed "s/hello/hi/" | sed "s/there/robots/"
+
