@@ -3,14 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_last.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aelsiddi <aelsiddi@student.42.ae>          +#+  +:+       +#+        */
+/*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 13:36:25 by hheggy            #+#    #+#             */
-/*   Updated: 2022/12/24 20:54:47 by aelsiddi         ###   ########.fr       */
+/*   Updated: 2023/01/05 17:10:24 by hheggy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	error(char *str, int err)
+{
+	ft_putstr_fd("minishell: ", 2);
+	if (str)
+	{
+		ft_putstr_fd(str, 2);
+		ft_putstr_fd(": ", 2);
+	}
+	if (!err)
+	{
+		ft_putendl_fd(strerror(errno), 2);
+		err = 127;
+	}
+	else
+		ft_putendl_fd("command not found", 2);
+	exit(err);
+}
 
 static int	get_err(char *str)
 {
@@ -34,15 +52,9 @@ static int	child(t_command *commands, int fd_out)
 	{
 		pid = fork();
 		if (pid)
-		{
 			return (pid);
-			// exit(0);
-		}
 		g_info.last_prcs = execve(commands->name, commands->argv, g_info.env);
-		//error(commands->name, get_err(commands->name));
-		get_err(commands->name);
-		if (!(g_info.last_prcs  != -1 ))
-			ft_putstr_fd(COMMAND_ERROR,1);
+		error(commands->name, get_err(commands->name));
 	}
 	return (pid);
 }

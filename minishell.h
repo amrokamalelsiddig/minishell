@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aelsiddi <aelsiddi@student.42.ae>          +#+  +:+       +#+        */
+/*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 12:12:36 by kpanikka          #+#    #+#             */
-/*   Updated: 2022/12/26 19:22:49 by aelsiddi         ###   ########.fr       */
+/*   Updated: 2023/01/05 17:03:46 by hheggy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ typedef struct s_info
 extern t_info	g_info;
 
 /////************ NEW PARSING FUNCTIONS *******//////////
+void		error(char *str, int err);
 char		*ft_getenv(char **envp, char *name);
 int			skip_argument(char *str);
 int			skip_quotes(char *str);

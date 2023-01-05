@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aelsiddi <aelsiddi@student.42.ae>          +#+  +:+       +#+        */
+/*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 10:36:13 by hheggy            #+#    #+#             */
-/*   Updated: 2023/01/01 22:54:15 by aelsiddi         ###   ########.fr       */
+/*   Updated: 2023/01/05 17:20:35 by hheggy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,8 @@ int	ft_cd1(char **argv)
 	char	*home;
 	int		result;
 
-	if (argv[2] != NULL)
-
 	home = get_str(g_info.env, "HOME=");
-	if ((!argv[1]) || !(home_flags(argv[1])))
+	if (!argv[1])
 		result = change_dir(home, g_info.env);
 	else
 		result = change_dir(argv[1], g_info.env);

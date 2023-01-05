@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aelsiddi <aelsiddi@student.42.ae>          +#+  +:+       +#+        */
+/*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 12:12:03 by kpanikka          #+#    #+#             */
-/*   Updated: 2023/01/01 23:13:23 by aelsiddi         ###   ########.fr       */
+/*   Updated: 2023/01/05 17:21:11 by hheggy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ int	main(int ac, char **av, char **env)
 {
 	init_info(ac, av, env);
 	if (!g_info.env || !g_info.bltn || !g_info.filed || !g_info.files)
-		printf("asojihaisuhdsh\n");
+		error(NULL, 0);
 	env = g_info.env;
 	set_signals();
 	prompt(env);

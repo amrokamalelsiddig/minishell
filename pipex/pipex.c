@@ -6,7 +6,7 @@
 /*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 13:38:18 by hheggy            #+#    #+#             */
-/*   Updated: 2022/12/23 13:39:08 by hheggy           ###   ########.fr       */
+/*   Updated: 2023/01/05 17:19:00 by hheggy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static int	child(int fd[2], t_command *commands, int fd_out)
 			dup2(fd[INPUT_END], STDOUT_FILENO);
 		close(fd[INPUT_END]);
 		g_info.last_prcs = execve(commands->name, commands->argv, g_info.env);
-		get_err(commands->name);
+		error(commands->name, get_err(commands->name));
 	}
 	return (pid);
 }
