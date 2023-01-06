@@ -1,16 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_utils2.c                                     :+:      :+:    :+:   */
+/*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 13:36:58 by hheggy            #+#    #+#             */
-/*   Updated: 2022/12/23 13:36:59 by hheggy           ###   ########.fr       */
+/*   Updated: 2023/01/06 21:27:41 by hheggy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+/*
+ERR_UTILS: This function has no arguments. 
+It checks the value of g_info.error and calls 
+ft_putendl_fd with an appropriate error message 
+and 2 (stderr) as the file descriptor.
+*/
 
 static void	err_utils(void)
 {
@@ -26,6 +33,14 @@ static void	err_utils(void)
 		ft_putendl_fd("Permission denied", 2);
 }
 
+/*
+ERROR_PIPEX: This function takes a string (str) as an argument.
+It prints "minishell: " to stderr.
+If str is not NULL, it prints str and ": " to stderr.
+If g_info.error is 0, it prints the error message 
+associated with errno to stderr. Otherwise, it calls err_utils.
+*/
+
 void	error_pipex(char *str)
 {
 	ft_putstr_fd("minishell: ", 2);
@@ -39,6 +54,17 @@ void	error_pipex(char *str)
 	else
 		err_utils();
 }
+
+/*
+chk builtin: This function takes a pointer to a 
+t_command struct (commands) as an argument.
+It initializes a variable code to NONBLTN.
+It compares commands->name to each of the built-in 
+commands in g_info.bltn and calls the corresponding built-in function with 
+commands->argv as an argument. It stores the return value in code.
+If code is not NONBLTN, it sets g_info.last_prcs to code.
+It returns code.
+*/
 
 int	chk_builtin(t_command *commands)
 {
@@ -66,6 +92,32 @@ int	chk_builtin(t_command *commands)
 	return (code);
 }
 
+/*
+DUPS: 
+sets up the standard input and output file descriptors for
+ a command by duplicating them to the given file descriptor 
+ values in fd_redir. It takes in two arguments:
+
+fd_redir: an array of two integers representing the 
+file descriptor values to be used as the standard input and output file 
+descriptors.
+cmd: a pointer to a t_command structure representing 
+the command being executed.
+The function first checks if the first element in 
+fd_redir is set to a value other than STD_VAL or HEREDOC. 
+If it is, then it duplicates the file descriptor value to the standard 
+input file descriptor using dup2. If the value is HEREDOC, then it opens 
+the file specified in cmd->file for reading, duplicates it to the standard input 
+file descriptor, and then closes the file.
+
+Next, the function checks if the second element in fd_redir is set to a 
+value other than STD_VAL. If it is, then it duplicates the file descriptor 
+value to the standard output file descriptor using dup2.
+
+Finally, the function closes the file descriptors specified in fd_redir 
+if they are not set to STD_VAL.
+*/
+
 static void	dups(int fd_redir[2], t_command *cmd)
 {
 	int	fd;
@@ -86,6 +138,40 @@ static void	dups(int fd_redir[2], t_command *cmd)
 		close(fd_redir[1]);
 	}
 }
+
+/*
+check fd ret: This function takes in two arrays of 
+integers fd_redir and fd, 
+and a pointer to a t_command structure cmd. 
+The function first checks if either of the values in fd_redir are negative. 
+If either of them is, 
+it means that there was an error while opening a file for redirection and 
+the function closes the 
+file descriptors in fd (if fd is not NULL) and returns an error code.
+Next, the function checks if either of the values in fd_redir is equal to the 
+constant HEREDOC, which indicates that the command is a here document. 
+If either value is HEREDOC, the function calls the 
+here_doc function with the delimiter string 
+from cmd and the cmd structure itself as arguments. 
+The here_doc function creates a temporary file, 
+opens it for writing, and writes the user input 
+(terminated by the delimiter string) to the file. T
+he here_doc function returns the process ID of the 
+child process it creates. 
+If the here_doc function returns a negative value, 
+the check_fd_ret function returns an error code.
+Finally, the function calls the dups function with 
+fd_redir and cmd as arguments. 
+The dups function duplicates the file descriptors in 
+fd_redir onto the standard input 
+and output file descriptors (STDIN_FILENO and STDOUT_FILENO) 
+and closes the file descriptors 
+in fd_redir if they are not equal to the constant STD_VAL 
+(which indicates that no redirection is needed).
+The check_fd_ret function returns 0 if it successfully 
+opens and redirects the necessary 
+file descriptors, and an error code otherwise.
+*/
 
 int	check_fd_ret(int fd_redir[2], int fd[2], t_command *cmd)
 {

@@ -6,11 +6,17 @@
 /*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 13:37:36 by hheggy            #+#    #+#             */
-/*   Updated: 2022/12/23 13:39:23 by hheggy           ###   ########.fr       */
+/*   Updated: 2023/01/07 01:20:02 by hheggy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+/*
+This function handles the signal SIGINT (Ctrl+C) 
+by printing a newline character, resetting the readline 
+buffer, and setting g_info.last_prcs to 1 and g_info.sig to 1.
+*/
 
 void	ft_signal_cltr_c(int sig)
 {
@@ -23,6 +29,13 @@ void	ft_signal_cltr_c(int sig)
 	g_info.sig = 1;
 }
 
+/*
+This function sets the signal handlers for 
+SIGQUIT, SIGTERM, and SIGINT. SIGQUIT and SIGTERM 
+are ignored, and SIGINT is handled by ft_signal_cltr_c. 
+It also sets g_info.sig to 0.
+*/
+
 void	set_signals(void)
 {
 	signal(SIGQUIT, SIG_IGN);
@@ -31,6 +44,13 @@ void	set_signals(void)
 	g_info.sig = 0;
 }
 
+/*
+This function sets the signal handlers for 
+SIGTERM, SIGINT, and SIGQUIT in a child process. 
+SIGTERM and SIGINT are set to the default signal handler, 
+and SIGQUIT is handled by ft_signal_cltr_c.
+*/
+
 void	signal_in_child(void)
 {
 	signal(SIGTERM, SIG_DFL);
@@ -38,11 +58,21 @@ void	signal_in_child(void)
 	signal(SIGQUIT, ft_signal_cltr_c);
 }
 
+/*
+This function handles the signals SIGINT and SIGQUIT by 
+ignoring them.
+*/
+
 void	ft_signal_pipes(int sig)
 {
 	signal(SIGINT, SIG_IGN);
 	(void) sig;
 }
+
+/*
+This function sets the signal handlers for SIGINT and 
+SIGQUIT to ft_signal_pipes
+*/
 
 void	signal_in_pipes(void)
 {

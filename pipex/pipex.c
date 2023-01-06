@@ -6,11 +6,20 @@
 /*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 13:38:18 by hheggy            #+#    #+#             */
-/*   Updated: 2023/01/05 17:19:00 by hheggy           ###   ########.fr       */
+/*   Updated: 2023/01/07 00:33:25 by hheggy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+/*
+FILL_FD: This function modifies the global variable g_info.
+filed by storing the file descriptors in fd_arr starting 
+at the first empty index in g_info.filed. 
+The number of file descriptors stored is specified by count. 
+If there are no empty indices left in g_info.filed or count is 0, 
+the function exits without storing any file descriptors.
+*/
 
 void	fill_fd(int *fd_arr, int count)
 {
@@ -29,6 +38,14 @@ void	fill_fd(int *fd_arr, int count)
 	}
 }
 
+/*
+GET_ERR: This function returns an error code based on the value 
+of the input string str. 
+If the environment variable PATH is not set, the function returns 0. 
+If str does not start with an alphabetical character, the function returns 0. 
+Otherwise, the function returns 127.
+*/
+
 static int	get_err(char *str)
 {
 	if (!ft_getenv(g_info.env, "PATH"))
@@ -37,6 +54,22 @@ static int	get_err(char *str)
 		return (0);
 	return (127);
 }
+
+/*
+CHILD: This function creates a child process using fork(), 
+which is a copy of the calling process. The child process 
+executes a command specified by commands, which is a pointer 
+to a t_command struct containing the name and arguments of 
+the command to be executed. The standard output of the command 
+is redirected to the write end of the pipe specified by fd if 
+fd_out is equal to STD_VAL. If the command is a built-in shell 
+command, it is executed directly in the child process. Otherwise, 
+the child process calls execve() to execute the command. 
+If an error occurs, the function calls error() and passes it 
+the name of the command and an error code returned by get_err(). 
+The function returns the child process ID if the child process is 
+successfully created, or 0 if the child process is the one being created.
+*/
 
 static int	child(int fd[2], t_command *commands, int fd_out)
 {
@@ -61,6 +94,22 @@ static int	child(int fd[2], t_command *commands, int fd_out)
 	return (pid);
 }
 
+/*
+PIPELINE: This function creates a pipeline between two processes 
+by calling child() 
+to create the child process and executing a command in it. 
+The standard input of the child process is redirected from the read 
+end of the pipe specified by fd, and the standard output of the child 
+process is redirected to the write end of the pipe if the file descriptor 
+for standard output in the t_command struct pointed to by commands is equal 
+to STD_VAL. If the function returns a value greater than or equal to 0, 
+it closes the read and write ends of the pipe specified by fd. 
+The function returns 
+the child process ID if the child process is successfully created, 1 
+if the command is a built-in shell command that should be executed in the 
+parent process, SIG_END if the command is NULL, or -1 if an error occurs.
+*/
+
 static int	pipeline(t_command *commands, int fd[2])
 {
 	pid_t	pid;
@@ -82,6 +131,20 @@ static int	pipeline(t_command *commands, int fd[2])
 	}
 	return (pid);
 }
+
+/*
+PIPEX: This function creates a pipeline of processes to 
+execute a list of commands specified by commands, which 
+is a pointer to a linked list of t_command structs. 
+The function creates a pipe for each pair of consecutive 
+commands in the list, and calls pipeline() to create a 
+child process and execute the first command in the pair. 
+If the command is a built-in shell command that should be 
+executed in the parent process, the function returns 1. 
+If the command is NULL, the function returns 0. If an error occurs, 
+the function returns -1. After all of the commands have 
+been executed, the function calls last_fork() to create a child process for
+*/
 
 int	pipex(t_command *commands)
 {
