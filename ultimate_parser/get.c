@@ -1,16 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get2.c                                             :+:      :+:    :+:   */
+/*   get.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 13:49:22 by hheggy            #+#    #+#             */
-/*   Updated: 2022/12/23 13:49:24 by hheggy           ###   ########.fr       */
+/*   Updated: 2023/01/07 14:02:59 by hheggy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+/*
+GET QUOTES CONTENT:
+This function takes in a string str and 
+returns a copy of the substring between the 
+first and second occurrences of the character 
+*str. If the second occurrence of *str is not 
+found, the function returns NULL.
+*/
 
 char	*get_quotes_content(char *str)
 {
@@ -27,6 +36,16 @@ char	*get_quotes_content(char *str)
 		raise_error(MEMORY_ERROR, NULL);
 	return (content);
 }
+
+/*
+GET DOLLAR:
+This function takes in a string str 
+and returns a copy of the substring 
+between the first dollar sign and the 
+next space, tab, vertical tab, or null 
+terminator. If str begins with $?, the 
+function returns a copy of "?".
+*/
 
 char	*get_dollar(char *str)
 {
@@ -47,6 +66,16 @@ char	*get_dollar(char *str)
 	return (dollar);
 }
 
+/*
+GET DOLLAR FOR EXPAND:
+This function is similar to get_dollar, 
+but it returns the substring between the 
+first dollar sign and the next space, tab, 
+vertical tab, colon, :, <, >, $, single quote, 
+double quote, or null terminator. If str begins 
+with $?, the function returns a copy of "?".
+*/
+
 char	*get_dollar_for_expand(char *str)
 {
 	char	*dollar;
@@ -66,6 +95,14 @@ char	*get_dollar_for_expand(char *str)
 	return (dollar);
 }
 
+/*
+GET REDIRECT:
+This function takes in a string str and 
+returns a copy of the substring following 
+the first redirect found in str. If no 
+redirect is found, the function returns NULL.
+*/
+
 char	*get_redirect(char *str)
 {
 	char	*redirect;
@@ -82,6 +119,15 @@ char	*get_redirect(char *str)
 	free(temp);
 	return (redirect);
 }
+
+/*
+GET ARGUMENT:
+This function takes in a string str and 
+returns a copy of the substring up to the 
+first space, tab, vertical tab, or null 
+terminator found in str. If no such character 
+is found, the function returns a copy of str.
+*/
 
 char	*get_argument(char *str)
 {
