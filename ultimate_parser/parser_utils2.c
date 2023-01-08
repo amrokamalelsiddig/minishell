@@ -6,11 +6,19 @@
 /*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 13:24:37 by hheggy            #+#    #+#             */
-/*   Updated: 2022/12/23 13:28:40 by hheggy           ###   ########.fr       */
+/*   Updated: 2023/01/08 14:38:16 by hheggy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+/*
+PRINT MSG:
+This function takes a pointer to an integer stat 
+and processes it to print an appropriate message 
+based on the value of stat. The message indicates 
+the status of a process that has terminated or stopped.
+*/
 
 void	print_msg(int *stat)
 {
@@ -31,6 +39,14 @@ void	print_msg(int *stat)
 	else if (!WIFSIGNALED(status))
 		g_info.last_prcs = WEXITSTATUS(status);
 }
+
+/*
+GET EXIT:
+This function takes a pointer to a t_command struct,
+and waits for all the processes in the linked list to 
+terminate. The function returns 0 after all processes have 
+terminated.
+*/
 
 int	get_exit(t_command *commands)
 {
@@ -53,6 +69,12 @@ int	get_exit(t_command *commands)
 	}
 	return (0);
 }
+
+/*
+EMPTY FD ARR:
+This function closes all open file descriptors 
+and removes all temporary files created for redirection.
+*/
 
 static void	empty_fd_arr(void)
 {
@@ -77,6 +99,14 @@ static void	empty_fd_arr(void)
 	}
 	ft_bzero(g_info.files, 16 * sizeof (char *));
 }
+
+/*
+GET FD:
+This function takes a pointer to a t_command struct,
+and processes the redirection instructions in the 
+linked list. The function returns 1 if an error occurred, 
+and 0 otherwise.
+*/
 
 static int	get_fd(t_command *command)
 {
@@ -104,6 +134,16 @@ static int	get_fd(t_command *command)
 	}
 	return (ret);
 }
+
+/*
+COMMAND CENTER:
+This function takes a string input and a pointer to a 
+pointer to a pointer to a string envp, and processes 
+the string as a command. The function parses the string, 
+sets up the necessary pipes and file redirections, and 
+executes the command. The function returns 0 after the 
+command has been executed.
+*/
 
 int	command_center(char *input, char ***envp)
 {

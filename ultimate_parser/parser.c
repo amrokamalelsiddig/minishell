@@ -1,16 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser2.c                                          :+:      :+:    :+:   */
+/*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 13:52:58 by hheggy            #+#    #+#             */
-/*   Updated: 2022/12/23 13:53:00 by hheggy           ###   ########.fr       */
+/*   Updated: 2023/01/08 14:39:30 by hheggy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+/*
+CHECK CORRECT USE OF PIPES:
+This function takes a string str and checks 
+if the pipes (| characters) in the string are 
+used correctly. The function sets the global error 
+flag if the pipes are used incorrectly.
+*/
 
 void	check_correct_use_of_pipes(char *str)
 {
@@ -40,6 +48,13 @@ void	check_correct_use_of_pipes(char *str)
 		raise_error(NEWL_ERROR, NULL);
 }
 
+/*
+STR IS EMPTY:
+This function takes a string str and 
+returns 1 if the string only consists of 
+whitespace characters, and 0 otherwise
+*/
+
 int	str_is_empty(char *str)
 {
 	int	index;
@@ -53,6 +68,16 @@ int	str_is_empty(char *str)
 	}
 	return (1);
 }
+
+/*
+PARSE STRING:
+This function takes a string str and parses 
+it into a linked list of t_command structs, 
+each representing a command and its arguments. 
+The function returns a pointer to the first element 
+of the linked list. If an error occurs during parsing, 
+the function frees the linked list and returns NULL.
+*/
 
 t_command	*parse_string(char *str)
 {

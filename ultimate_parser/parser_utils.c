@@ -6,11 +6,20 @@
 /*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 13:49:45 by hheggy            #+#    #+#             */
-/*   Updated: 2023/01/07 14:20:52 by hheggy           ###   ########.fr       */
+/*   Updated: 2023/01/08 14:36:08 by hheggy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+/*
+GET_SPLIT_PATH:
+This function returns an array 
+of strings containing the directories 
+in the PATH environment variable. 
+The PATH variable is a list of directories 
+that the shell searches for executables.
+*/
 
 char	**get_split_path(void)
 {
@@ -29,6 +38,14 @@ char	**get_split_path(void)
 	return (path);
 }
 
+/*
+INSERT_CONENT:
+This function takes a string str, and 
+inserts the string content into it at 
+the index start, replacing the portion 
+of the string from start to end. It returns the modified string.
+*/
+
 char	*insert_content(char *str, int start, int end, char *content)
 {
 	char	*first_part;
@@ -45,6 +62,16 @@ char	*insert_content(char *str, int start, int end, char *content)
 	ft_free_strs(temp, first_part, second_part);
 	return (new);
 }
+
+/*
+RAISE ERROR:
+This function prints an error message to the standard error stream. 
+The error message is passed as the message parameter. 
+If the str parameter is not NULL, the message is printed as 
+message followed by the string str surrounded by single quotes. 
+If an error occurs while printing the error message, the function 
+calls itself with a MEMORY_ERROR message.
+*/
 
 void	*raise_error(char *message, char *str)
 {
@@ -70,6 +97,15 @@ void	*raise_error(char *message, char *str)
 	return (NULL);
 }
 
+/*
+IS BUILTIN COMMAND:
+This function checks if the string name is the name of a 
+built-in command. A built-in command is a command that 
+is built into the shell and does not need to be executed 
+from an external executable file. The function returns 1 
+if name is the name of a built-in command, and 0 otherwise.
+*/
+
 int	is_builtin_command(char *name)
 {
 	if (!ft_strncmp("echo", name, ft_strlen(name)))
@@ -88,6 +124,19 @@ int	is_builtin_command(char *name)
 		return (1);
 	return (0);
 }
+
+/*
+ADD FULL PATH:
+This function takes a string str and an array 
+of strings path, and tries to find the full path 
+of the executable file specified by str. If str is 
+already an absolute path or a built-in command, or 
+if it can be found in the current directory, the function 
+returns str as is. Otherwise, the function searches for the 
+executable in the directories specified by path, and returns 
+the full path if it is found. If the executable is not found, 
+the function returns str.
+*/
 
 char	*add_full_path(char *str, char **path)
 {

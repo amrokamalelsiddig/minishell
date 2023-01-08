@@ -1,16 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env1.c                                             :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 10:36:45 by hheggy            #+#    #+#             */
-/*   Updated: 2022/12/24 10:36:46 by hheggy           ###   ########.fr       */
+/*   Updated: 2023/01/08 14:54:10 by hheggy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+/*
+get env:
+takes in an environment envp and a string name, 
+and returns the value of the environment variable 
+with the given name. If there is no such environment 
+variable, it returns NULL.
+*/
 
 char	*ft_getenv(char **envp, char *name)
 {
@@ -35,6 +43,17 @@ char	*ft_getenv(char **envp, char *name)
 	free(variable);
 	return (NULL);
 }
+
+/*
+FT ENV:
+takes in an array of strings argv and does the following:
+If argv has more than one element, it prints an error message 
+to STDERR_FILENO and returns 1.
+If the environment variable PATH is not defined, it prints an 
+error message to STDERR_FILENO and returns 127.
+Otherwise, it prints all the environment variables in g_info.
+env to STDOUT_FILENO and returns 0
+*/
 
 int	ft_env1(char **argv)
 {
