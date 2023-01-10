@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aelsiddi <aelsiddi@student.42.ae>          +#+  +:+       +#+         #
+#    By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/03 18:36:40 by kpanikka          #+#    #+#              #
-#    Updated: 2022/12/26 18:39:42 by aelsiddi         ###   ########.fr        #
+#    Updated: 2023/01/10 19:55:26 by hheggy           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
 NAME	= minishell
 cc		= gcc -g
-CFLAG	= -Wall -Werror -Wextra -I libft/
+CFLAG	= -Wall -Werror -Wextra -I libft/ -I/usr/local/opt/readline/include -L/usr/local/opt/readline/lib
 RMFLAG  = -f
 SRC		= minishell.c \
 		builtin_functions/builtin_utils.c \
