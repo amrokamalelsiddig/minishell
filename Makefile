@@ -6,7 +6,7 @@
 #    By: aelsiddi <aelsiddi@student.42.ae>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/03 18:36:40 by kpanikka          #+#    #+#              #
-#    Updated: 2022/12/26 18:39:42 by aelsiddi         ###   ########.fr        #
+#    Updated: 2023/01/14 21:00:33 by aelsiddi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,11 +53,11 @@ all		: $(NAME)
 bonus	: all
  
 %.o : %.c
-	$(CC) $(CFLAG) -c $< -o $@
+	@$(CC) $(CFLAG) -c $< -o $@
 
 clean	:
 		@make clean -C libft/
-		$(RM) $(RMFLAG) $(OBJS)
+		@$(RM) $(RMFLAG) $(OBJS)
 
 fclean	: clean
 	$(RM) $(RMFLAG) $(NAME)
@@ -71,7 +71,32 @@ $(NAME) : $(OBJS)
 
 		@echo "Compiling minishell...\n"
 		@echo "*************************\n"
-
+		@echo "                                                                                                           ,oo.                                                                        "
+		@echo "                                                   .....                                              ....'dWNo.....                                                                  "    
+		@echo "                                                  'kXXX0;                                         'cdk0KXXXWMWNXXXK0ko,.                'okkOd.                                       "    
+		@echo "                                                  'kXXX0;                                       .oXMMMMMWNNWMMNNWWMMMMNx.               ;XMMMK,                                       "    
+		@echo "                                                   .....                                       .dWMMWOl:,',xWNo',;lOWMMWd.              ;XMMMK,                                       "    
+		@echo "                                                                                               ,KMMM0,     lNX:    ,0MMM0'              ;XMMMK,                                       "    
+		@echo "               ......          ......                                      ......              :XMMMO.     lNX:    .oOkdc.              ;XMMMK,    ......                             "    
+		@echo "    .oxxxc..:dk0KKKK0ko,   'lxOKKKKKKOxl'         .lxxxo'       :xxxd,.,lxO0KKKKKOxl'          cNMMMO.     lNX:                         ;XMMMKc,oxOKKKKKK0kdc.                        "    
+		@echo "    ,KMMMKxOXK0000KNWMMNxcxXNXK0000XWMMWXo.       '0MMMX:      .xWMMWOkXNX000000NMMMXl'.       :XMMM0,     lNX:                         ;XMMMWXNNK00000KXWMMWXo.                      "    
+		@echo "    ,KMMMW0c'.    .'dNMMWWNx;..   ..:OWMMXc       '0MMMX:      .xWMMMNk:'..    .;OWMMX0c       'OMMMWOl:;''dWX:                         ;XMMMW0c'.     ..c0MMMNc                      "    
+		@echo "    ,KMMMNl         .kMMMWk.         cNMMWx.      '0MMMX:      .xWMMWk.          cNMMMWk.       :KMMMMMMWNXNMW0doc:,..                  ;XMMMWo           lNMMWx.                     "    
+		@echo "    ,KMMMN:         .dWMMWd.         cNMMMO.      '0MMMX:      .xWMMWo           :XMMMM0'        'oOKNWWMMMMMMMMMMWWX0d;.               ;XMMMNc           lNMMMk.                     "    
+		@echo "    ,KMMMX:         .dWMMWd.         cNMMMO.      '0MMMX:      .xWMMWo           :XMMMMK,           ..,;:ld0WWXKXNWMMMMNx.              ;XMMMX:           oWMMMO.                     "    
+		@echo "    ,KMMMX:         .dWMMWx.         cNMMMO.      '0MMMX:      .xWMMWd           :XMMMMK,                  lNXl..';oXMMMNo              ;XMMMX;           oWMMMO.                     "    
+		@echo "    ,KMMMX:         .dWMMWx.         cNMMMO.      '0MMMX:      .xWMMWd.          :XMMMMK,                  lNX:    .dWMMMO.             ;XMMMK,           oWMMMO.                     "    
+		@echo "    ,KMMMX:         .dWMMWx.         cNMMMO.      '0MMMX:      .xWMMWd.          :XMMMMK,                  lNX:     lNMMM0,             ;XMMMK,           oWMMMO.                     "    
+		@echo "    ,KMMMX:         .dWMMWx.         cNMMMO.      '0MMMX:      .xWMMWd.          :XMMMMK,      'clol'      lNX:     lNMMM0,             ;XMMMK,           oWMMMO.                     "    
+		@echo "    ,KMMMX:         .dWMMWx.         cNMMMO.      '0MMMX:      .xWMMWd.          :XMMMMK,     .kMMMNc      lNX:     cNMMMO.             ;XMMMK,           oWMMMO.                     "    
+		@echo "    ,KMMMX:         .dWMMWx.         cNMMMO.      '0MMMX:      .xWMMWd.          :XMMMMK,     .dWMMWk.     lNX:    .oWMMWd.             ;XMMMK,           oWMMMO.                     "    
+		@echo "    ,KMMMX:         .dWMMWx.         cNMMMO.      '0MMMX:      .xWMMWd.          :XMMMMK,      ;KMMMWOlc:,;xWNd;;:cxXMMMK;              ;XMMMK,           oWMMMO.                     "    
+		@echo "    ,KMMMX:         .dWMMWx.         cNMMMO.      '0MMMX:      .xWMMWd.          :XMMMMK,       :0WMMMMMWWWWMMWWWWMMMMNO;               :XMMMK,           oWMMMO.                     "    
+		@echo "    .oxxxo'          ;xxxx:          'dxxxc.      .lxxxo'       :xxxx;           'oxxxxo.        .;lxk0KKKKNMWNKKK0Oxl;.                'oxxxo.           ;dxxxc.                     "    
+		@echo "                                                                                                      .....dWNl....                                                                   "     
+		@echo "                                                                                                           cK0;                                                                       "    
+		@echo "                                                                                                            ..                      .lxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;                  "
+		@echo "                                                                                                                                    'kXXXXXXXXXXXXXXXXXXXXXXXXXXXXXl                  " 
 		@$(cc) $(CFLAG) $(OBJS) -o  $(NAME) $(LIBFT) -lreadline 
 		@echo "\n\033[0mDone !"
 
