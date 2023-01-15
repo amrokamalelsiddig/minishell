@@ -6,14 +6,14 @@
 #    By: aelsiddi <aelsiddi@student.42.ae>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/03 18:36:40 by kpanikka          #+#    #+#              #
-#    Updated: 2023/01/14 21:00:33 by aelsiddi         ###   ########.fr        #
+#    Updated: 2023/01/15 18:13:12 by aelsiddi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
 NAME	= minishell
 cc		= gcc -g
-CFLAG	= -Wall -Werror -Wextra -I libft/
+CFLAG	= -Wall -Werror -Wextra -I libft/ -I/usr/local/opt/readline/include 
 RMFLAG  = -f
 SRC		= minishell.c \
 		builtin_functions/builtin_utils.c \
@@ -97,7 +97,7 @@ $(NAME) : $(OBJS)
 		@echo "                                                                                                           cK0;                                                                       "    
 		@echo "                                                                                                            ..                      .lxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;                  "
 		@echo "                                                                                                                                    'kXXXXXXXXXXXXXXXXXXXXXXXXXXXXXl                  " 
-		@$(cc) $(CFLAG) $(OBJS) -o  $(NAME) $(LIBFT) -lreadline 
+		@$(cc) $(CFLAG) $(OBJS) -L/usr/local/opt/readline/lib -o  $(NAME) $(LIBFT) -lreadline 
 		@echo "\n\033[0mDone !"
 
 .PHONY : all clean fclean re
