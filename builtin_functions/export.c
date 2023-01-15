@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aelsiddi <aelsiddi@student.42.ae>          +#+  +:+       +#+        */
+/*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 10:37:11 by hheggy            #+#    #+#             */
-/*   Updated: 2023/01/01 23:13:08 by aelsiddi         ###   ########.fr       */
+/*   Updated: 2023/01/10 20:02:07 by hheggy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int	ft_export(char **argv)
 	}
 	if (!(flag))
 		g_info.error = 1;
-	// if (g_info.error)
-	// 	return (1);
+	if (g_info.error)
+		return (1);
 	return (g_info.error);
 }

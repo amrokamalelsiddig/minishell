@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aelsiddi <aelsiddi@student.42.ae>          +#+  +:+       +#+        */
+/*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 01:14:21 by aelsiddi          #+#    #+#             */
-/*   Updated: 2022/11/17 03:03:13 by aelsiddi         ###   ########.fr       */
+/*   Updated: 2023/01/10 19:59:53 by hheggy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ typedef struct s_list
 
 typedef struct node
 {
-    int data;
-    int index;
-    struct node *link;
-} t_node;
+	int			data;
+	int			index;
+	struct node	*link;
+}				t_node;
 
 int		ft_isalnum(int c);
 int		ft_isalpha(int c);

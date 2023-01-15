@@ -6,7 +6,7 @@
 /*   By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 12:12:36 by kpanikka          #+#    #+#             */
-/*   Updated: 2023/01/10 19:46:18 by hheggy           ###   ########.fr       */
+/*   Updated: 2023/01/10 20:00:18 by hheggy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,7 @@ typedef struct s_info
 {
 	uint8_t		sig;
 	uint8_t		error;
-	// uint8_t		last_prcs; to avoid  error: comparison is always true due to limited range of data type when check the return of excv
-	int 		last_prcs;
+	int			last_prcs;
 	int32_t		std_fd[2];
 	int32_t		*filed;
 	t_command	*commands;

@@ -6,14 +6,14 @@
 #    By: hheggy <hheggy@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/03 18:36:40 by kpanikka          #+#    #+#              #
-#    Updated: 2023/01/10 19:55:26 by hheggy           ###   ########.fr        #
+#    Updated: 2023/01/15 18:04:09 by hheggy           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
 NAME	= minishell
 cc		= gcc -g
-CFLAG	= -Wall -Werror -Wextra -I libft/ -I/usr/local/opt/readline/include -L/usr/local/opt/readline/lib
+CFLAG	= -Wall -Werror -Wextra -I libft/ -I/usr/local/opt/readline/include 
 RMFLAG  = -f
 SRC		= minishell.c \
 		builtin_functions/builtin_utils.c \
@@ -72,7 +72,7 @@ $(NAME) : $(OBJS)
 		@echo "Compiling minishell...\n"
 		@echo "*************************\n"
 
-		@$(cc) $(CFLAG) $(OBJS) -o  $(NAME) $(LIBFT) -lreadline 
+		@$(cc) $(CFLAG) $(OBJS) -L/usr/local/opt/readline/lib -o  $(NAME) $(LIBFT) -lreadline 
 		@echo "\n\033[0mDone !"
 
 .PHONY : all clean fclean re
